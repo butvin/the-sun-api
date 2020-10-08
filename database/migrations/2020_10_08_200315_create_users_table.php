@@ -19,14 +19,14 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
 //            $table->string('phone')->unique();
 //            $table->string('phone')->nullable();
-//            $table->string('password');
+            $table->string('password');
 //            $table->string('fb_token')->nullable();
 //            $table->string('google_token')->nullable();
 //            $table->integer('role_id')->nullable();
 //            $table->boolean('status')->nullable();
 //            $table->boolean('verified')->nullable();
 //            //$table->timestamp('email_verified_at')->nullable();
-//            $table->timestamps();
+            $table->timestamps();
 //            $table->softDeletes();
         });
     }
@@ -38,7 +38,7 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', fn(Blueprint $table) => $table->dropSoftDeletes());
+//        Schema::table('users', fn(Blueprint $table) => $table->dropSoftDeletes());
         Schema::dropIfExists('users');
     }
 }
