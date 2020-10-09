@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 use App\Models\User;
+use App\Http\Middleware\CorsMiddleware;
 
 class UserController extends Controller
 {
@@ -16,7 +17,7 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        //
+        $this->middleware(CorsMiddleware::class);
     }
 
     /**
