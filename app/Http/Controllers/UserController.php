@@ -9,6 +9,9 @@ use App\Models\User;
 //use App\Models\Role;
 
 use App\Http\Middleware\CorsMiddleware;
+use Illuminate\Support\Facades\Hash;
+
+use function MongoDB\BSON\toJSON;
 
 class UserController extends Controller
 {
@@ -46,6 +49,9 @@ class UserController extends Controller
     public function show(int $id) :JsonResponse
     {
         $user = User::find($id)->first();
+        $role = User::find($id)->role->first();
+
+        $user->role_id = $role;
 
         return ($user) ?
             response()->json($user, 200, []) :
@@ -62,13 +68,49 @@ class UserController extends Controller
     public function store(Request $request) :JsonResponse
     {
         $attributes = $request->all();
+
+        $attributes['password'] = Hash::make($attributes['password']);
+//        $attributes['created_at'] = time();
+//        $attributes['updated_at'] = time();
+        $attributes['status'] = 1;
+        $attributes['role_id'] = 3;
+        $attributes['verified_at'] = time();
+
         $user = User::create($attributes);
         $user->save();
 
         return ($user) ?
-            response()->json($user, 201, []) :
-            response()->json('error', 422, []); // mistake com un user
+            response()->json('User created', 201, []) :
+            response()->json('error', 422, []); // TODO: some code &  some error
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+//    public function register(Request $request)
+//    {
+//        $this->validate($request, User::registerRules());
+//        $attributes = $request->all();
+//        //        $attributes = $request->only('full_name', 'email', 'phone', 'password');
+//        $subject = (isset($attributes['email'])) ? 'email' : 'phone';
+//
+//
+//        $user = User::create($attributes);
+//        $user->save();
+//        $confirmation = $this->createConfirmation($user->id);
+//
+//        $this->sendConfirmationEmail($confirmation->code, $user->email);
+//
+//        $data = [
+//            'created_user' => $user,
+//            'confirmation' => $confirmation,
+//        ];
+//        $msg = 'The verification code was send to your '. $user->email;
+//        return $this
+//            ->sendJsonResponse( $data, $msg, 201)
+//            ->setCallback('callback');
+//    }
 
     /**
      * For future implements.
@@ -96,5 +138,43 @@ class UserController extends Controller
             return response()->json('error', 422);
         }
     }
+
+//    /**
+//     * Handle user authentication by email or phone with password.
+//     *
+//     * @param  \Illuminate\Http\Request  $request
+//     *
+//     * @return \Illuminate\Http\JsonResponse
+//     * @throws \Illuminate\Validation\ValidationException
+//     */
+//    public function login(Request $request) :JsonResponse
+//    {
+//        $attributes = $request->all();
+//
+////        $this->validate($request, User::loginRules());
+//        $token = null;
+//
+//        if ( $user = User::isVerified($attributes) ) {
+//            // Check the user status
+//            if ($user->status == null) {
+//                return $this->sendJsonError(422, 'This user is blocked.');
+//            }
+//            // Check the user is verified
+//            if ($user->verified == null) {
+//                return $this->sendJsonError(422, 'This user is not verified.');
+//            }
+//            // Generate access token for specific user
+//            $accessToken = $this->createAccessToken($user->id);
+//            $data = [];
+//            $data['access_token'] = $accessToken->token;
+//            $data['expires_at'] = $accessToken->expires_at;
+//
+//            return $this->sendJsonResponse($data, 'Authentication is successful!', 200)
+//                ->setCallback($request->input('callback'));
+//        } else {
+//            return $this->sendJsonError(422, 'Wrong login or password.')
+//                ->setCallback($request->input('callback'));
+//        }
+//    }
 
 }

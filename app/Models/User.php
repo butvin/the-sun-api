@@ -25,7 +25,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function role()
     {
-        return $this->belongsTo('App\Models\Role', 'id', 'role_id');
+        return $this->hasOne('App\Models\Role', 'id', 'role_id');
     }
 
     /**
@@ -41,7 +41,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'fb_token', 'gl_token', 'api_token',
+        'name', 'email', 'fb_token', 'role_id', 'phone',
+        'gl_token', 'api_token', 'status', 'verified_at',
         'password', // TODO remove before deploy
     ];
 
@@ -61,5 +62,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $casts = [
         'created_at' => 'timestamp',
+        'verified_at' => 'datetime',
     ];
 }
