@@ -20,12 +20,13 @@ class CreateUsersTable extends Migration
 //            $table->string('phone')->unique();
 //            $table->string('phone')->nullable();
             $table->string('password');
-//            $table->string('fb_token')->nullable();
-//            $table->string('google_token')->nullable();
+            $table->string('fb_token')->nullable();
+            $table->string('gl_token')->nullable();
+            $table->string('api token')->nullable();
 //            $table->integer('role_id')->nullable();
 //            $table->boolean('status')->nullable();
 //            $table->boolean('verified')->nullable();
-//            //$table->timestamp('email_verified_at')->nullable();
+//            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
 //            $table->softDeletes();
         });
