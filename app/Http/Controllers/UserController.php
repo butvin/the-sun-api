@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 use App\Models\User;
+//use App\Models\Role;
+
 use App\Http\Middleware\CorsMiddleware;
 
 class UserController extends Controller

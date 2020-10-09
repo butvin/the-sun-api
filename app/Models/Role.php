@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class Role extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable, HasFactory;
 
@@ -18,15 +18,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var string
      */
-    protected $table = 'users';
-
-    /**
-     * Get the role that owns the user.
-     */
-    public function role()
-    {
-        return $this->belongsTo('App\Models\Role', 'id', 'role_id');
-    }
+    protected $table = 'roles';
 
     /**
      * The primary key for the model.
@@ -41,18 +33,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'fb_token', 'gl_token', 'api_token',
-        'password', // TODO remove before deploy
+        'name', 'status', 'active',
     ];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-//    protected $hidden = [
-//        'password',
-//    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -62,4 +44,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $casts = [
         'created_at' => 'timestamp',
     ];
+
+        public function user()
+        {
+            return $this->hasOne('App\Models\User', 'role_id', 'id');
+        }
 }

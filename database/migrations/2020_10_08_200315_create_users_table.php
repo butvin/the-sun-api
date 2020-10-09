@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('fb_token')->nullable();
             $table->string('gl_token')->nullable();
             $table->string('api token')->nullable();
-//            $table->integer('role_id')->nullable();
+            $table->integer('role_id')->nullable();
 //            $table->boolean('status')->nullable();
 //            $table->boolean('verified')->nullable();
 //            $table->timestamp('email_verified_at')->nullable();
