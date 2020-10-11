@@ -43,7 +43,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $fillable = [
         'name', 'email', 'fb_token', 'role_id', 'phone',
         'gl_token', 'api_token', 'status', 'verified_at',
-        'password', // TODO remove before deploy
+        'password',
     ];
 
     /**
@@ -51,9 +51,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var array
      */
-//    protected $hidden = [
+    protected $hidden = [
 //        'password',
-//    ];
+    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -64,4 +64,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'created_at' => 'timestamp',
         'verified_at' => 'datetime',
     ];
+
+    /**
+     * Get users role
+     *
+     * @param $user_id
+     *
+     * @return \App\Models\Role
+     */
+    static public function getUserRole($user_id) :Role
+    {
+        return User::find($user_id)->role->first();
+    }
 }
