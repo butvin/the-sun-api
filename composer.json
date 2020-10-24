@@ -1,11 +1,11 @@
 {
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
+    "name": "butvin/sun",
+    "description": "The Sun REST API Service",
     "keywords": ["framework", "laravel", "lumen"],
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.3",
+        "php": "^7.4.3",
         "laravel/lumen-framework": "^8.0"
     },
     "require-dev": {
