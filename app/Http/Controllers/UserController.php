@@ -66,8 +66,6 @@ class UserController extends Controller
         $attributes = $request->all();
 
         $attributes['password'] = Hash::make($attributes['password']);
-//        $attributes['created_at'] = time();
-//        $attributes['updated_at'] = time();
         $attributes['status'] = 1;
         $attributes['role_id'] = 3;
         $attributes['verified_at'] = time();
