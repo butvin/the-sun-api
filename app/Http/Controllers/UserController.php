@@ -6,10 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 use App\Models\User;
-//use App\Models\Role;
 
 use App\Http\Middleware\CorsMiddleware;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -61,8 +61,19 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request) :JsonResponse
+    public function register(Request $request) :JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:3',
+            'email' => 'nullable|unique:users|min:7|max:320',
+            'phone' => 'nullable|int',
+            'password' => 'required|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422, []);
+        }
+
         $attributes = $request->all();
 
         $attributes['password'] = Hash::make($attributes['password']);
@@ -70,11 +81,15 @@ class UserController extends Controller
         $attributes['role_id'] = 3;
         $attributes['verified_at'] = time();
 
-        $user = User::create($attributes);
-        $user->save();
+        try {
+            $user = User::create($attributes);
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json($e, 422, []);
+        }
 
         return ($user) ?
-            response()->json('User created', 201, []) :
+            response()->json('successfully registered', 201, []) :
             response()->json('error', 422, []);
     }
     /**

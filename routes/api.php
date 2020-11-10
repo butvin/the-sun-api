@@ -15,7 +15,7 @@
 
     $router->get('users', 'UserController@index');
     $router->get('user/{id:[0-9]+}', 'UserController@show');
-    $router->post('user/register', 'UserController@store');
+    $router->post('user/register', 'UserController@register');
     $router->delete('user/{id:[0-9]+}/', 'UserController@destroy');
 
 
