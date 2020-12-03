@@ -44,7 +44,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $id) :JsonResponse
+    public function getUser(int $id) :JsonResponse
     {
         $user = User::find($id)->first();
         $user->role_id = $user::getUserRole($id);

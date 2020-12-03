@@ -113,7 +113,7 @@ $app->register(App\Providers\EventServiceProvider::class);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
-    'prefix' => env('APP_API_PREFIX', 'api/v1'),
+//    'prefix' => env('APP_API_PREFIX', 'api/v1'),
 ], function ($router) {
     require __DIR__.'/../routes/api.php';
 });
