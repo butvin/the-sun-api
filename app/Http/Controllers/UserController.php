@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -11,6 +11,13 @@ use App\Http\Middleware\CorsMiddleware;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+//use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+/**
+ * Class UserController
+ *
+ * @package App\Http\Controllers
+ */
 class UserController extends Controller
 {
     /**
@@ -38,16 +45,23 @@ class UserController extends Controller
     }
 
     /**
-     * Show user.
+     * Show user by id.
      *
-     * @param $id
+     * @param integer $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getUser(int $id) :JsonResponse
     {
-        $user = User::find($id)->first();
-        $user->role_id = $user::getUserRole($id);
+        try {
+            $user = User::findOrFail($id);
+
+            $user->role_id = $user::getUserRole($id);
+//        } catch (\Throwable $t) {
+//            return response()->json([$t->getMessage(), ],404);
+        } catch (\Throwable $t) {
+            return response()->json([$t->getMessage(), ],404);
+        }
 
         return ($user) ?
             response()->json($user, 200, []) :
