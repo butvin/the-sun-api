@@ -75,34 +75,37 @@ class UserController extends Controller
      */
     public function register(Request $request) :JsonResponse
     {
+        //$attributes = $request->all();
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|unique:users|max:320',
-//            'phone' => 'int',
             'password' => 'required|min:6',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422, []);
+            return response()->json($validator->errors(), 422);
         }
 
         $attributes = $request->all();
 
         $attributes['password'] = Hash::make($attributes['password']);
         $attributes['status'] = 1;
-        $attributes['role_id'] = 3;
-        $attributes['verified_at'] = time();
+        $attributes['role_id'] = 1;
 
         try {
             $user = User::create($attributes);
             $user->save();
-        } catch (\Exception $e) {
-            return response()->json($e, 422, []);
-        }
 
-        return ($user) ?
-            response()->json('successfully registered', 201, []) :
-            response()->json('error', 422, []);
+            $data = [
+                'msg' => 'Successfully registered',
+                'user' => $user,
+            ];
+
+            return response()->json($data, 201);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage());
+        }
     }
     /**
      * For future implements.

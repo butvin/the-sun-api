@@ -50,7 +50,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-//        'password', 'gl_token', 'api_token', 'fb_token'
+//        'password',
+//        'gl_token', 'api_token', 'fb_token',
     ];
 
     /**
@@ -59,7 +60,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $casts = [
-        'created_at' => 'timestamp',
+        'created_at' => 'datetime:d-m-Y H:i:s P',
+        //'updated_at' => 'datetime:Y-m-d H:00:00',
         'verified_at' => 'timestamp',
     ];
 
