@@ -13,17 +13,18 @@
 |
 */
 
-$router->get('/', fn() => redirect('api/v1'));
+$router->get('/', fn() => $router->app->version());
+//$router->get('/', fn() => redirect('api/v1'));
 
-$router->group(['prefix' => 'api/v1', 'middleware' => 'cors'], function () use ($router) {
+$router->group([
+    'prefix' => 'api/v1',
+//    'middleware' => ['cors'],
+    ], function () use ($router) {
+//    $router->get('/', fn() => $router->app->version());
 
-    $router->get('/', fn () => redirect()->route('users'));
-    $router->get('users', [
-        'as' => 'users',
-        'uses' =>'UserController@index',
-    ]);
+    $router->get('users', ['uses' =>'UserController@getAllUsers', 'as' => 'users']);
+    $router->post('users', 'UserController@register');
     $router->get('user/{id:[0-9]+}', 'UserController@getUser');
-    $router->post('user/register', 'UserController@register');
     $router->delete('user/{id:[0-9]+}/', 'UserController@destroy');
 
 });

@@ -2,16 +2,27 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Lumen\Auth\Authorizable;
+
 
 class Role extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable, HasFactory;
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'role_id', 'id');
+    }
 
     /**
      * The table associated with the model.
@@ -20,12 +31,6 @@ class Role extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $table = 'roles';
 
-    /**
-     * The primary key for the model.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -33,7 +38,7 @@ class Role extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'status', 'active',
+        'parent_id', 'name', 'description', 'status',
     ];
 
     /**
@@ -42,11 +47,8 @@ class Role extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $casts = [
-        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp',
+        //'created_at' => 'timestamp',
     ];
 
-        public function user()
-        {
-            return $this->hasMany('App\Models\User', 'role_id', 'id');
-        }
 }

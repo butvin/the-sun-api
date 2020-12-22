@@ -7,11 +7,14 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Lumen\Auth\Authorizable;
+use App\Models\Role;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable, HasFactory;
+    use Authenticatable, Authorizable, HasFactory, SoftDeletes;
 
     /**
      * The table associated with the model.
@@ -21,19 +24,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $table = 'users';
 
     /**
-     * Get the role that owns the user.
-     */
-    public function role()
-    {
-        return $this->hasOne('App\Models\Role', 'id', 'role_id');
-    }
-
-    /**
-     * The primary key for the model.
+     * Get the role that owns the user
      *
-     * @var string
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    protected $primaryKey = 'id';
+    public function role(): HasOne
+    {
+        return $this->hasOne(Role::class, 'id', 'role_id');
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -41,9 +39,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'fb_token', 'role_id', 'phone',
-        'gl_token', 'api_token', 'status', 'verified_at',
-        'password',
+        'name', 'email', 'status', 'phone',
+        'fb_token', 'role_id',  'gl_token', 'api_token',
+        'verified_at', 'password',
     ];
 
     /**
@@ -52,7 +50,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-//        'password',
+//        'password', 'gl_token', 'api_token', 'fb_token'
     ];
 
     /**
@@ -62,7 +60,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $casts = [
         'created_at' => 'timestamp',
-        'verified_at' => 'datetime',
+        'verified_at' => 'timestamp',
     ];
 
     /**

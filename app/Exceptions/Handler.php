@@ -57,9 +57,28 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e)
     {
+//        if ($e instanceof ModelNotFoundException) {
+//
+//            $data = [
+//                'origin_msg' => $e->getMessage(),
+//                'origin_code' => $e->getCode(),
+//                'model' => ($e->getModel()),
+//                'ids' => ($e->getIds()),
+//                'trace' => ($e->getTrace()),
+//                '$e' => ($e),
+//                'called_from' => static::class,
+//            ];
+//
+//            $msg = 'No result for ' . $data['ids'][0];
+//
+//            return response()->json($msg);
+//        }
+
         if (env('APP_DEBUG') === true) {
             return parent::render($request, $e);
         }
+
+
 
         $headers = [
             'Access-Control-Allow-Origin' => '*',

@@ -35,13 +35,13 @@ class UserController extends Controller
      *
      * * @return \Illuminate\Http\JsonResponse
      */
-    public function index() :JsonResponse
+    public function getAllUsers() :JsonResponse
     {
-        $users = User::all();
+        $users = User::all()->where('status', '=', 1);
 
         return ($users->count() > 0) ?
-            response()->json($users, 200, []) :
-            response()->json('There are no users', 200, []);
+            response()->json($users) :
+            response()->json('There are no users', 202);
     }
 
     /**
@@ -56,9 +56,7 @@ class UserController extends Controller
         try {
             $user = User::findOrFail($id);
 
-            $user->role_id = $user::getUserRole($id);
-//        } catch (\Throwable $t) {
-//            return response()->json([$t->getMessage(), ],404);
+            //$user->role_id = $user::getUserRole($id);
         } catch (\Throwable $t) {
             return response()->json([$t->getMessage(), ],404);
         }
@@ -78,9 +76,9 @@ class UserController extends Controller
     public function register(Request $request) :JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|min:3',
-            'email' => 'nullable|unique:users|min:7|max:320',
-            'phone' => 'nullable|int',
+            'name' => 'required|string|max:255',
+            'email' => 'required|unique:users|max:320',
+//            'phone' => 'int',
             'password' => 'required|min:6',
         ]);
 

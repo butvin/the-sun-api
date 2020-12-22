@@ -11,13 +11,14 @@ class CreateRolesTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->bigInteger('parent_id')->nullable();
+            $table->string('name', 16);
+            $table->string('description', 256);
             $table->boolean('status')->nullable();
-            $table->boolean('active')->nullable();
             $table->timestamps();
         });
     }
@@ -27,7 +28,7 @@ class CreateRolesTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('roles');
     }
