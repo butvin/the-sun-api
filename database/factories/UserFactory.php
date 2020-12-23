@@ -35,6 +35,8 @@ class UserFactory extends Factory
             'gl_token' => null,
             'fb_token' => fn () => null,
             'verified_at' => $this->faker->dateTime,
+            'created_at' => $this->faker->dateTime,
+            'updated_at' => $this->faker->dateTime,
         ];
     }
 }

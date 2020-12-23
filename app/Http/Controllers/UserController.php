@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-
-use App\Models\User;
-
-use App\Http\Middleware\CorsMiddleware;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
+use App\Http\Resources\User as UserResource;
+use App\Http\Middleware\CorsMiddleware;
 
 
 /**
@@ -46,11 +45,9 @@ class UserController extends Controller
             return response()->json('no users');
         }
 
-//        $userCollection = $users->map(fn($item, $key) => var_dump($item, $key));
-//        dd($unique);
+        $usersResource = UserResource::collection($users);
 
-        return response()->json($users);
-//        return response()->json($users);
+        return response()->json($usersResource);
     }
 
     /**

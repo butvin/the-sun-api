@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 
 class RolesTableSeeder extends Seeder
 {
-    protected array $roles = ['guest', 'user', 'admin', 'godlike'];
+    protected array $roles = ['guest', 'user', 'admin', 'root'];
     /**
      * Run the 'roles' table seeds
      *

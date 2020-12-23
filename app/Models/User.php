@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -14,14 +15,7 @@ use App\Models\Role;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable, HasFactory, SoftDeletes;
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'users';
+    use SoftDeletes, Authenticatable, Authorizable, HasFactory;
 
     /**
      * Get the role that owns the user
@@ -34,13 +28,20 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
         'name', 'email', 'status', 'phone',
-        'fb_token', 'role_id',  'gl_token', 'api_token',
+        'fb_token', 'role_id', 'gl_token', 'api_token',
         'verified_at', 'password',
     ];
 
@@ -60,20 +61,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $casts = [
-        'created_at' => 'datetime:d-m-Y H:i:s P',
-        //'updated_at' => 'datetime:Y-m-d H:00:00',
-        'verified_at' => 'timestamp',
+        'verified_at' => 'datetime: d-m-Y H:i:s',
+        'created_at' => 'datetime: d-m-Y H:i:s',
+        'updated_ed_at' => 'datetime: d-m-Y H:i:s',
+        'deleted_at' => 'datetime: d-m-Y H:i:s',
     ];
-
-    /**
-     * Get users role
-     *
-     * @param $user_id
-     *
-     * @return \App\Models\Role
-     */
-    static public function getUserRole($user_id) :Role
-    {
-        return User::find($user_id)->role->first();
-    }
 }
