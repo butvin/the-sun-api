@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
@@ -17,13 +19,22 @@ class UserFactory extends Factory
     /**
      * Define the model's default state.
      *
+     * @throws \Exception
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         return [
+            'role_id' => random_int(1, 4),
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
+            'phone' => $this->faker->phoneNumber,
+            'password' => Hash::make($this->faker->password()),
+            'status' => random_int(0, 1),
+            'api_token' => Hash::make(Str::random(12)),
+            'fb_token' => Hash::make(Str::random(12)),
+            'gl_token' => Hash::make(Str::random(12)),
+            'verified_at' => $this->faker->dateTime,
         ];
     }
 }

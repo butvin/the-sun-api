@@ -11,11 +11,13 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
          $this->call([
+             /* necessary important core seeds*/
              RolesTableSeeder::class,
-             //UsersTableSeeder:class,
+             /* additional seeds*/
+             UsersTableSeeder::class,
          ]);
     }
 }

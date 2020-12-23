@@ -37,11 +37,13 @@ class UserController extends Controller
      */
     public function getAllUsers() :JsonResponse
     {
-        $users = User::all()->where('status', '=', 1);
+        $users = User::where('status', 1)->get();
+
+        $users->dd();
 
         return ($users->count() > 0) ?
             response()->json($users) :
-            response()->json('There are no users', 202);
+            response()->json('No users');
     }
 
     /**
@@ -53,17 +55,7 @@ class UserController extends Controller
      */
     public function getUser(int $id) :JsonResponse
     {
-        try {
-            $user = User::findOrFail($id);
-
-            //$user->role_id = $user::getUserRole($id);
-        } catch (\Throwable $t) {
-            return response()->json([$t->getMessage(), ],404);
-        }
-
-        return ($user) ?
-            response()->json($user, 200, []) :
-            response()->json('error', 404, []);
+        return response()->json(User::findOrFail($id));
     }
 
     /**
@@ -75,21 +67,26 @@ class UserController extends Controller
      */
     public function register(Request $request) :JsonResponse
     {
-        //$attributes = $request->all();
+        $attributes = $request->all();
+        $response = ['msg' => null, 'status' => null, 'data' => null, ];
 
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($attributes, [
             'name' => 'required|string|max:255',
             'email' => 'required|unique:users|max:320',
             'password' => 'required|min:6',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            $response = [
+                'msg' => 'failed',
+                'errors' => $validator->errors(),
+            ];
+
+            return response()->json($response, 422);
         }
 
-        $attributes = $request->all();
-
         $attributes['password'] = Hash::make($attributes['password']);
+        $attributes['api_token'] = Hash::make($attributes['name'].$attributes['password']);
         $attributes['status'] = 1;
         $attributes['role_id'] = 1;
 
@@ -97,40 +94,40 @@ class UserController extends Controller
             $user = User::create($attributes);
             $user->save();
 
-            $data = [
+            $response = [
                 'msg' => 'Successfully registered',
-                'user' => $user,
+                'data' => $user,
             ];
 
-            return response()->json($data, 201);
+            return response()->json($response, 201);
         } catch (\Exception $e) {
-            return response()->json($e->getMessage());
+            $response['msg'] = 'Fail user registration';
+            $response['errors'] = $e->getMessage();
+
+            return response()->json($response);
         }
     }
-    /**
-     * For future implements.
-     */
-    public function update()
+
+    public function updateUser()
     {
         // TODO: after front app
     }
 
     /**
-     * For future implements.
+     * Destroy user (soft delete)
      *
      * @param  int  $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(int $id) :JsonResponse
+    public function destroyUser(int $id) :JsonResponse
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
-        if ($user) {
-            $user->delete();
-            return response()->json('success', 200);
-        } else {
-            return response()->json('error', 422);
-        }
+        $user->status = 0;
+        $user->save();
+        $user->delete();
+
+        return response()->json('Successfully deleted');
     }
 }

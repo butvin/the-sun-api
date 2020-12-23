@@ -69,9 +69,9 @@ class Handler extends ExceptionHandler
                 'called_from' => static::class,
             ];
 
-            $msg = 'No result for ' . $data['ids'][0];
+            $msg = 'Model '.$data['model'] . ' not fond with id ' . $data['ids'][0];
 
-            return response()->json($msg);
+            return response()->json(['msg' => $msg, ]);
         }
 
         if (env('APP_DEBUG') === true) {
