@@ -18,13 +18,16 @@ class RoleFactory extends Factory
      * Define the model's default state.
      *
      * @return array
+     * @throws \Exception
      */
     public function definition(): array
     {
         return [
-            'name' => $this->faker->text(16),
-            'description' => $this->faker->text(256),
+            'name' => $this->faker->text(7),
+            'code' => random_int(1, 999),
+            'description' => $this->faker->text(),
             'status' => 1,
+            'updated_at' => $this->faker->dateTime,
         ];
     }
 }

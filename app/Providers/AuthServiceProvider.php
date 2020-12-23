@@ -23,7 +23,7 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         // Here you may define how you wish users to be authenticated for your Lumen
         // application. The callback which receives the incoming request instance
@@ -32,7 +32,8 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app['auth']->viaRequest('api', function ($request) {
 
-//            $headers=$request->headers->all();
+            $headers = $request->headers->all();
+            dd($headers);
 
             if ($request->input('api_token')) {
                 return User::where('api_token', $request->input('api_token'))->first();
@@ -40,19 +41,21 @@ class AuthServiceProvider extends ServiceProvider
         });
     }
 
-//    public function checkAccessToken($token)
-//    {
-//        $token = User::where(['api_token' => $token])->first();
-//        if ($token) {
+    public function checkAccessToken($token): \Illuminate\Http\JsonResponse
+    {
+        $token = User::where(['api_token' => $token])->first();
+
+        if (! $token) {
 //            if ($token->expires_at < time()) {
-//                $response = ['status' => 200, 'message' => 'Access token expired'];
+//                $data = ['msg' => 'Access token expired'];
 //                return response()->json($response, 200, []);
 //            }
-//            return User::where(['id' => $token->user_id])->first();
-//        } else {
-//            $response = ['status' => 404, 'error' => 'Access token not found'];
-//            return response()->json($response, 404, [], JSON_PRETTY_PRINT)->send();
-//        }
-//    }
+            $data = ['status' => 'failed', 'msg' => 'access token not found'];
+
+            return response()->json($data, 204);
+        }
+
+        return $token;
+    }
 
 }

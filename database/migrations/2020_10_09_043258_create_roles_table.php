@@ -18,7 +18,7 @@ class CreateRolesTable extends Migration
             $table->bigInteger('code')->nullable();
             $table->bigInteger('parent_id')->nullable();
             $table->string('name');
-            $table->string('description', 255);
+            $table->string('description');
             $table->boolean('status')->nullable();
             $table->timestamps();
         });

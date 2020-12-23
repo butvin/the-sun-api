@@ -11,7 +11,6 @@ use App\Http\Middleware\CorsMiddleware;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-//use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * Class UserController
@@ -20,6 +19,8 @@ use Illuminate\Support\Facades\Validator;
  */
 class UserController extends Controller
 {
+    private string $defaultUserStatus;
+
     /**
      * Create a new controller instance.
      *
@@ -27,23 +28,29 @@ class UserController extends Controller
      */
     public function __construct()
     {
+        $this->defaultUserStatus = env('USER_START_UP_STATUS', 1);
+
         $this->middleware(CorsMiddleware::class);
     }
 
     /**
-     * Show all users.
+     * Show all active users.
      *
-     * * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getAllUsers() :JsonResponse
     {
         $users = User::where('status', 1)->get();
 
-        $users->dd();
+        if ($users->isEmpty()) {
+            return response()->json('no users');
+        }
 
-        return ($users->count() > 0) ?
-            response()->json($users) :
-            response()->json('No users');
+//        $userCollection = $users->map(fn($item, $key) => var_dump($item, $key));
+//        dd($unique);
+
+        return response()->json($users);
+//        return response()->json($users);
     }
 
     /**
@@ -68,7 +75,8 @@ class UserController extends Controller
     public function register(Request $request) :JsonResponse
     {
         $attributes = $request->all();
-        $response = ['msg' => null, 'status' => null, 'data' => null, ];
+
+        $response = ['msg' => '', 'status' => 'fail', 'errors' => null, 'data' => null, ];
 
         $validator = Validator::make($attributes, [
             'name' => 'required|string|max:255',
@@ -78,7 +86,7 @@ class UserController extends Controller
 
         if ($validator->fails()) {
             $response = [
-                'msg' => 'failed',
+                'msg' => 'fail',
                 'errors' => $validator->errors(),
             ];
 
@@ -87,7 +95,7 @@ class UserController extends Controller
 
         $attributes['password'] = Hash::make($attributes['password']);
         $attributes['api_token'] = Hash::make($attributes['name'].$attributes['password']);
-        $attributes['status'] = 1;
+        $attributes['status'] = $this->defaultUserStatus;
         $attributes['role_id'] = 1;
 
         try {
@@ -128,6 +136,6 @@ class UserController extends Controller
         $user->save();
         $user->delete();
 
-        return response()->json('Successfully deleted');
+        return response()->json('User successfully deleted', 204);
     }
 }

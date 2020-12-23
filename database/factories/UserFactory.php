@@ -31,9 +31,9 @@ class UserFactory extends Factory
             'phone' => $this->faker->phoneNumber,
             'password' => Hash::make($this->faker->password()),
             'status' => random_int(0, 1),
-            'api_token' => Hash::make(Str::random(12)),
-            'fb_token' => Hash::make(Str::random(12)),
-            'gl_token' => Hash::make(Str::random(12)),
+            'api_token' => Hash::make(Str::random(7)),
+            'gl_token' => null,
+            'fb_token' => fn () => null,
             'verified_at' => $this->faker->dateTime,
         ];
     }
