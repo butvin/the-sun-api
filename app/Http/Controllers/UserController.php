@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Http\Resources\User as UserResource;
+use App\Http\Resources\UsersCollection;
 use App\Http\Middleware\CorsMiddleware;
 
 
@@ -18,8 +20,6 @@ use App\Http\Middleware\CorsMiddleware;
  */
 class UserController extends Controller
 {
-    private string $defaultUserStatus;
-
     /**
      * Create a new controller instance.
      *
@@ -27,8 +27,6 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->defaultUserStatus = env('USER_START_UP_STATUS', 1);
-
         $this->middleware(CorsMiddleware::class);
     }
 
@@ -39,19 +37,21 @@ class UserController extends Controller
      */
     public function getAllUsers() :JsonResponse
     {
-        $users = User::where('status', 1)->get();
+        $users = new UsersCollection(User::all());
+
+        $usersResource = UserResource::collection(User::all());
+
+        $users->resource->all() | $usersResource->resource->all();
 
         if ($users->isEmpty()) {
             return response()->json('no users');
         }
 
-        $usersResource = UserResource::collection($users);
-
-        return response()->json($usersResource);
+        return response()->json($users);
     }
 
     /**
-     * Show user by id.
+     * Get user by id.
      *
      * @param integer $id
      *
@@ -59,7 +59,7 @@ class UserController extends Controller
      */
     public function getUser(int $id) :JsonResponse
     {
-        return response()->json(User::findOrFail($id));
+        return response()->json(new UserResource(User::findOrFail($id)));
     }
 
     /**
@@ -92,7 +92,7 @@ class UserController extends Controller
 
         $attributes['password'] = Hash::make($attributes['password']);
         $attributes['api_token'] = Hash::make($attributes['name'].$attributes['password']);
-        $attributes['status'] = $this->defaultUserStatus;
+        $attributes['status'] = 1;
         $attributes['role_id'] = 1;
 
         try {

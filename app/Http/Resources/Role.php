@@ -13,7 +13,7 @@ class Role extends JsonResource
      *
      * @var bool
      */
-    public $preserveKeys = true;
+    //public $preserveKeys = true;
 
     /**
      * Transform the resource collection into an array.
@@ -26,13 +26,13 @@ class Role extends JsonResource
     {
         return [
             'id' => $this->id,
-            'code' => $this->code,
-            'parent_id' => $this->parent_id,
+//            'code' => $this->code,
+//            'parent_id' => $this->parent_id,
             'name' => $this->name,
             'description' => $this->description,
-            'status' => $this->status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+//            'status' => $this->status,
+//            'created_at' => $this->created_at,
+//            'updated_at' => $this->updated_at,
         ];
     }
 }

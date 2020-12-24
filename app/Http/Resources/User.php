@@ -5,17 +5,23 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\Role as RoleResources;
 use Illuminate\Http\Resources\Json\JsonResource;
-//use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Request;
 
 class User extends JsonResource
 {
     /**
+     * The resource instance.
+     *
+     * @var mixed
+     */
+    public $resource;
+
+    /**
      * Indicates if the resource's collection keys should be preserved.
      *
      * @var bool
      */
-    public $preserveKeys = true;
+    //public $preserveKeys = true;
 
     /**
      * Transform the resource collection into an array.
@@ -26,12 +32,13 @@ class User extends JsonResource
      */
     public function toArray($request): array
     {
-        return [
+        /*return [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'phone' => $this->phone,
             'status' => $this->status,
-            'role' => ($this->role()->first()),
+            'role' => $this->role()->first(),
             'password' => $this->password,
             'api_token' => $this->api_token,
             'gl_token' => $this->gl_token,
@@ -40,6 +47,7 @@ class User extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
-        ];
+        ];*/
+        return parent::toArray($request);
     }
 }

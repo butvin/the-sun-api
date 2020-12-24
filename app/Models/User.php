@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -12,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Lumen\Auth\Authorizable;
 use App\Models\Role;
+use App\Http\Resources\UsersCollection;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -24,7 +24,19 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function role(): HasOne
     {
-        return $this->hasOne(Role::class, 'id', 'role_id');
+        return $this
+            ->hasOne(Role::class, 'id', 'role_id')
+            ->where('status', '=', 1);
+    }
+
+    /**
+     * @param  string[]  $columns
+     *
+     * @return User[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public static function allUsersActiveStatus($columns = ['*'])
+    {
+        return parent::all($columns)->where('status', '=', 1);
     }
 
     /**
@@ -33,6 +45,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var string
      */
     protected $table = 'users';
+
+    /**
+     * The number of models to return for pagination.
+     *
+     * @var int
+     */
+    protected $perPage = 5;
 
     /**
      * The attributes that are mass assignable.
@@ -51,8 +70,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-//        'password',
-//        'gl_token', 'api_token', 'fb_token',
+        //'password', 'gl_token', 'api_token', 'fb_token',
     ];
 
     /**
@@ -61,9 +79,21 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $casts = [
-        'verified_at' => 'datetime: d-m-Y H:i:s',
-        'created_at' => 'datetime: d-m-Y H:i:s',
-        'updated_ed_at' => 'datetime: d-m-Y H:i:s',
-        'deleted_at' => 'datetime: d-m-Y H:i:s',
+        'verified_at' => 'datetime:d-m-Y H:i:s',
+        'created_at' => 'datetime:d-m-Y H:i:s',
+        'updated_ed_at' => 'datetime:d-m-Y H:i:s',
+        'deleted_at' => 'datetime:d-m-Y H:i:s',
     ];
+
+    /**
+     * Create a new Eloquent Collection instance.
+     *
+     * @param  array  $models
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function newCollection(array $models = [])
+    {
+        return new UsersCollection($models);
+    }
 }
