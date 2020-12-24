@@ -16,13 +16,13 @@
 $router->get('/', fn() => redirect('api/v1/'));
 
 $router->group([
-    'prefix' => 'api/v1',
-    'middleware' => ['cors', ],
+        'prefix' => 'api/v1',
+        'middleware' => ['cors', ],
     ], function () use ($router) {
     $router->get('/', fn() => $router->app->version() );
     $router->get('users', [
-        'uses' =>'UserController@getAllUsers',
         'as' => 'users',
+        'uses' => 'UserController@getAllUsers',
     ]);
 
     // User CRUD

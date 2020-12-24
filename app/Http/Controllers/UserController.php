@@ -37,12 +37,19 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAllUsers() :JsonResponse
+    public function getAllUsers(): JsonResponse
     {
-        $users = new UsersCollection(UserResource::collection(User::all()));
+        $users = new UsersCollection(
+            UserResource::collection(User::all())
+        );
 
         if ($users instanceof UsersCollection && $users->isEmpty()) {
-            return response()->json(['msg' => 'No users'], 202);
+            $data = [
+                'msg' => 'there are no users',
+                'success' => 1,
+            ];
+
+            return response()->json($data, 204);
         }
 
         return response()->json($users);
@@ -55,9 +62,16 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUser(int $id) :JsonResponse
+    public function getUser(int $id): JsonResponse
     {
-        return response()->json(new UserResource(User::findOrFail($id)));
+        $user = new UserResource(User::findOrFail($id));
+
+        $data = [
+            'data' => $user,
+            'success' => 1,
+        ];
+
+        return response()->json($data);
     }
 
     /**
@@ -67,11 +81,9 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(Request $request) :JsonResponse
+    public function register(Request $request): JsonResponse
     {
         $attributes = $request->all();
-
-        $response = ['msg' => '', 'status' => 'fail', 'errors' => null, 'data' => null, ];
 
         $validator = Validator::make($attributes, [
             'name' => 'required|string|max:255',
@@ -80,16 +92,16 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            $response = [
-                'msg' => 'fail',
-                'errors' => $validator->errors(),
+            $data = [
+                'msg' => $validator->errors(),
+                'success' => 0,
             ];
 
-            return response()->json($response, 422);
+            return response()->json($data, 422);
         }
 
         $attributes['password'] = Hash::make($attributes['password']);
-        $attributes['api_token'] = Hash::make($attributes['name'].$attributes['password']);
+        $attributes['api_token'] = Hash::make('bla-bla-bla-'.(string)time());
         $attributes['status'] = 1;
         $attributes['role_id'] = 1;
 
@@ -97,23 +109,27 @@ class UserController extends Controller
             $user = User::create($attributes);
             $user->save();
 
-            $response = [
-                'msg' => 'Successfully registered',
+            $data = [
+                'msg' => 'successfully registered',
                 'data' => $user,
+                'success' => 1,
             ];
 
-            return response()->json($response, 201);
+            return response()->json($data, 201);
         } catch (\Exception $e) {
-            $response['msg'] = 'Fail user registration';
-            $response['errors'] = $e->getMessage();
+            $data = [
+                'msg' => 'fail user registration',
+                'data' => $e->getMessage(),
+                'success' => 1,
+            ];
 
-            return response()->json($response);
+            return response()->json($data);
         }
     }
 
     public function updateUser()
     {
-        // TODO: after front app
+        // todo: ...
     }
 
     /**
@@ -123,14 +139,19 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroyUser(int $id) :JsonResponse
+    public function destroyUser(int $id): JsonResponse
     {
         $user = User::findOrFail($id);
-
         $user->status = 0;
         $user->save();
         $user->delete();
 
-        return response()->json('User successfully deleted', 204);
+        $data = [
+            'msg' => 'user successfully deleted',
+            'data' => $user,
+            'success' => 1,
+        ];
+
+        return response()->json($data, 204);
     }
 }

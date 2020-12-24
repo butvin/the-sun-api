@@ -10,6 +10,7 @@ use Illuminate\Validation\ValidationException;
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -26,9 +27,9 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = [
 //        AuthorizationException::class,
-//        HttpException::class,
+        HttpException::class,
 //        ModelNotFoundException::class,
-//        ValidationException::class,
+        ValidationException::class,
     ];
 
     /**
@@ -57,42 +58,41 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e)
     {
-        if ($e instanceof ModelNotFoundException) {
-
-            $data = [
-                'origin_msg' => $e->getMessage(),
-                'origin_code' => $e->getCode(),
-                'model' => ($e->getModel()),
-                'ids' => ($e->getIds()),
-                'trace' => ($e->getTrace()),
-                '$e' => ($e),
-                'called_from' => static::class,
-            ];
-
-            $msg = 'Model '.$data['model'] . ' not fond with id ' . $data['ids'][0];
-
-            return response()->json(['msg' => $msg, ]);
-        }
-
-        if (env('APP_DEBUG') === true) {
-            return parent::render($request, $e);
-        }
-
-
-
         $headers = [
             'Access-Control-Allow-Origin' => '*',
             'Access-Control-Allow-Methods'=> 'POST, GET, OPTIONS, PUT, DELETE',
             'Access-Control-Allow-Headers'=> 'Content-Type, X-Auth-Token, Origin, x-access-token'
         ];
 
-        $statusCode = 500;
-
-        if ($e instanceof HttpException) {
-            $statusCode = $e->getStatusCode();
+        if ($e instanceof ModelNotFoundException) {
+            $data = [
+                'msg' => 'Not found model by id '.$e->getIds()[0],
+                'success' => false,
+                'meta' => [
+                    'origin_msg' => $e->getMessage(),
+                    'origin_code' => $e->getCode(),
+                    'model' => $e->getModel(),
+                    'requested_ids' => count($e->getIds()) === 1 ?
+                        $e->getIds()[0] : $e->getIds(),
+                ],
+            ];
+            return response()->json($data, 200, $headers);
         }
 
-        return response()->json([$e->getMessage(), $statusCode,], $statusCode, $headers);
+        if ($e instanceof HttpException) {
+            $data = [
+                'msg' => $e->getMessage(),
+                'success' => false,
+                'meta' => [
+                    'original_code' => $e->getStatusCode(),
+                ],
+            ];
+            return response()->json($data, 200, $headers);
+        }
 
+        if (env('APP_DEBUG') === true) {
+            return parent::render($request, $e);
+        }
     }
+
 }
