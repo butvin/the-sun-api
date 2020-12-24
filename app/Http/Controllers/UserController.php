@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\UsersCollection;
 use App\Http\Middleware\CorsMiddleware;
+
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 
 /**
@@ -37,14 +39,10 @@ class UserController extends Controller
      */
     public function getAllUsers() :JsonResponse
     {
-        $users = new UsersCollection(User::all());
+        $users = new UsersCollection(UserResource::collection(User::all()));
 
-        $usersResource = UserResource::collection(User::all());
-
-        $users->resource->all() | $usersResource->resource->all();
-
-        if ($users->isEmpty()) {
-            return response()->json('no users');
+        if ($users instanceof UsersCollection && $users->isEmpty()) {
+            return response()->json(['msg' => 'No users'], 202);
         }
 
         return response()->json($users);

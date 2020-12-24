@@ -32,14 +32,24 @@ class Role extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $table = 'roles';
 
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'parent_id', 'name', 'description', 'status', 'code',
+        'parent_id',
+        'name', 'description', 'status', 'code',
+        'created_at', 'updated_at',
+    ];
+
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        //'id', 'code', 'parent_id',
     ];
 
     /**
@@ -48,8 +58,8 @@ class Role extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $casts = [
-        'created_at' => 'datetime:d-m-Y H:i:s',
-        'updated_at' => 'datetime:d-m-Y H:i:s',
+        'created_at' => 'datetime:d/m/Y H:i:s',
+        'updated_at' => 'datetime:d/m/Y H:i:s',
     ];
 
 }

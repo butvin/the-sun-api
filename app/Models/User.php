@@ -10,12 +10,30 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Lumen\Auth\Authorizable;
-use App\Models\Role;
 use App\Http\Resources\UsersCollection;
+use App\Models\Role;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use SoftDeletes, Authenticatable, Authorizable, HasFactory;
+    use SoftDeletes,
+        Authenticatable,
+        Authorizable,
+        HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
+
+    /**
+     * @return array
+     */
+    public function isActiveStatus()
+    {
+        return $this->status;
+    }
 
     /**
      * Get the role that owns the user
@@ -25,7 +43,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function role(): HasOne
     {
         return $this
-            ->hasOne(Role::class, 'id', 'role_id')
+            ->hasOne(\App\Models\Role::class, 'id', 'role_id')
             ->where('status', '=', 1);
     }
 
@@ -36,15 +54,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public static function allUsersActiveStatus($columns = ['*'])
     {
-        return parent::all($columns)->where('status', '=', 1);
+        return parent::all($columns)
+            ->where('status', '=', 1);
     }
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'users';
 
     /**
      * The number of models to return for pagination.
@@ -59,9 +71,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'status', 'phone',
-        'fb_token', 'role_id', 'gl_token', 'api_token',
-        'verified_at', 'password',
+        'role_id', 'name', 'email', 'status', 'phone',
+        'fb_token', 'gl_token', 'api_token', 'password',
+        'created_at', 'updated_at', 'verified_at',
     ];
 
     /**
@@ -70,7 +82,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        //'password', 'gl_token', 'api_token', 'fb_token',
+        'password', 'deleted_at', 'role_id',
+        'gl_token', 'fb_token', //'api_token',
     ];
 
     /**
@@ -79,10 +92,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $casts = [
-        'verified_at' => 'datetime:d-m-Y H:i:s',
-        'created_at' => 'datetime:d-m-Y H:i:s',
-        'updated_ed_at' => 'datetime:d-m-Y H:i:s',
-        'deleted_at' => 'datetime:d-m-Y H:i:s',
+        'verified_at' => 'datetime:d/m/Y H:i:s',
+        'created_at' => 'datetime:d/m/Y H:i:s',
+        'updated_at' => 'datetime:d/m/Y H:i:s',
+        'deleted_at' => 'datetime:d/m/Y H:i:s',
     ];
 
     /**
