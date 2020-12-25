@@ -16,19 +16,14 @@
 $router->get('/', fn() => redirect('api/v1/'));
 
 $router->group([
-        'prefix' => 'api/v1',
-        'middleware' => ['cors', ],
-    ], function () use ($router) {
-    $router->get('/', fn() => $router->app->version() );
-    $router->get('users', [
-        'as' => 'users',
-        'uses' => 'UserController@getAllUsers',
-    ]);
-
-    // User CRUD
-    $router->post('users', 'UserController@register');
-    $router->get('users/{id:[0-9]+}', 'UserController@getUser');
-    $router->put('users/{id:[0-9]+}', 'UserController@updateUser');
-    $router->delete('users/{id:[0-9]+}/', 'UserController@destroyUser');
+    'prefix' => '/v1',
+//    'middleware' => ['auth'],
+], function () use ($router) {
+    $router->get('/', fn() => $router->app->version());
+    $router->get('users', ['uses' => 'UserController@getAllUsers']);
+    $router->post('users', ['uses' => 'UserController@register']);
+    $router->get('users/{id:[0-9]+}', ['uses' => 'UserController@getUser']);
+    $router->put('users/{id:[0-9]+}', ['uses' => 'UserController@updateUser']);
+    $router->delete('users/{id:[0-9]+}/', ['uses' => 'UserController@destroyUser']);
 });
 

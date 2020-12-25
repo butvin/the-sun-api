@@ -12,7 +12,7 @@ use App\Http\Resources\User as UserResource;
 use App\Http\Resources\UsersCollection;
 use App\Http\Middleware\CorsMiddleware;
 
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+//use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 
 /**
@@ -39,24 +39,19 @@ class UserController extends Controller
      */
     public function getAllUsers(): JsonResponse
     {
-        $users = new UsersCollection(
-            UserResource::collection(User::all())
-        );
+        $users = new UsersCollection(UserResource::collection(
+            User::where('status', 1)->orderBy('id')->get()
+        ));
 
         if ($users instanceof UsersCollection && $users->isEmpty()) {
-            $data = [
-                'msg' => 'there are no users',
-                'success' => 1,
-            ];
-
-            return response()->json($data, 204);
+            return response()->json(['msg' => 'no users found', ]);
         }
 
         return response()->json($users);
     }
 
     /**
-     * Get user by id.
+     * Get user resource by id.
      *
      * @param integer $id
      *
@@ -64,18 +59,15 @@ class UserController extends Controller
      */
     public function getUser(int $id): JsonResponse
     {
-        $user = new UserResource(User::findOrFail($id));
+        $user = new UserResource(
+            User::findOrFail($id)
+        );
 
-        $data = [
-            'data' => $user,
-            'success' => 1,
-        ];
-
-        return response()->json($data);
+        return response()->json($user);
     }
 
     /**
-     * Create user
+     * Create user and store
      *
      * @param  \Illuminate\Http\Request  $request
      *
@@ -92,16 +84,13 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            $data = [
-                'msg' => $validator->errors(),
-                'success' => 0,
-            ];
+            $data = ['msg' => $validator->errors(), 'success' => false, ];
 
             return response()->json($data, 422);
         }
 
         $attributes['password'] = Hash::make($attributes['password']);
-        $attributes['api_token'] = Hash::make('bla-bla-bla-'.(string)time());
+        $attributes['api_token'] = Hash::make('bla-bla-bla-'.time());
         $attributes['status'] = 1;
         $attributes['role_id'] = 1;
 
@@ -112,15 +101,15 @@ class UserController extends Controller
             $data = [
                 'msg' => 'successfully registered',
                 'data' => $user,
-                'success' => 1,
+                'success' => true,
             ];
 
             return response()->json($data, 201);
         } catch (\Exception $e) {
             $data = [
-                'msg' => 'fail user registration',
+                'msg' => 'registration failed',
                 'data' => $e->getMessage(),
-                'success' => 1,
+                'success' => false,
             ];
 
             return response()->json($data);
@@ -142,14 +131,12 @@ class UserController extends Controller
     public function destroyUser(int $id): JsonResponse
     {
         $user = User::findOrFail($id);
-        $user->status = 0;
-        $user->save();
         $user->delete();
 
         $data = [
-            'msg' => 'user successfully deleted',
+            'msg' => 'successfully deleted',
             'data' => $user,
-            'success' => 1,
+            'success' => true,
         ];
 
         return response()->json($data, 204);

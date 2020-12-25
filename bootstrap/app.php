@@ -2,11 +2,10 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-(new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
-    dirname(__DIR__)
-))->bootstrap();
+(new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(dirname(__DIR__)))
+    ->bootstrap();
 
-date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
+date_default_timezone_set(env('APP_TIMEZONE', 'EET'));
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +18,7 @@ date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 |
 */
 
-$app = new Laravel\Lumen\Application(
-    dirname(__DIR__)
-);
+$app = new Laravel\Lumen\Application(dirname(__DIR__));
 
 $app->withFacades();
 
@@ -72,12 +69,13 @@ $app->configure('app');
 |
 */
 
-$app->middleware([
-    App\Http\Middleware\ExampleMiddleware::class
-]);
+//$app->middleware([
+//
+//]);
 
 $app->middleware([
-    App\Http\Middleware\CorsMiddleware::class
+    App\Http\Middleware\CorsMiddleware::class,
+    App\Http\Middleware\ExampleMiddleware::class,
 ]);
 
 $app->routeMiddleware([
@@ -113,9 +111,8 @@ $app->register(App\Providers\EventServiceProvider::class);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
-//    'prefix' => env('APP_API_PREFIX', 'api/v1'),
-], function ($router) {
-    require __DIR__.'/../routes/api.php';
-});
+    'prefix' => 'api',
+    'middleware'=> ['cors'],
+], fn($router) => require __DIR__.'/../routes/api.php');
 
 return $app;

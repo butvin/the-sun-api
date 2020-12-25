@@ -26,10 +26,22 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-//        AuthorizationException::class,
+        AuthorizationException::class,
         HttpException::class,
-//        ModelNotFoundException::class,
+        ModelNotFoundException::class,
         ValidationException::class,
+    ];
+
+    /**
+     * Common required headers.
+     *
+     * @var array|string[]
+     */
+    protected array $commonHeaders = [
+        'Access-Control-Allow-Origin' => '*',
+        'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, PUT, DELETE',
+        'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin, x-access-token, X-Butvin-Header',
+        'Access-Control-Allow-Credentials' => 'true',
     ];
 
     /**
@@ -58,41 +70,44 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e)
     {
-        $headers = [
-            'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Methods'=> 'POST, GET, OPTIONS, PUT, DELETE',
-            'Access-Control-Allow-Headers'=> 'Content-Type, X-Auth-Token, Origin, x-access-token'
+        $data = [
+            'msg' => null,
+            'success' => false,
+            'meta' => [
+                'origin_msg' => null,
+                'origin_code' => null,
+                'origin_exception' => null,
+            ],
         ];
 
         if ($e instanceof ModelNotFoundException) {
-            $data = [
-                'msg' => 'Not found model by id '.$e->getIds()[0],
-                'success' => false,
-                'meta' => [
-                    'origin_msg' => $e->getMessage(),
-                    'origin_code' => $e->getCode(),
-                    'model' => $e->getModel(),
-                    'requested_ids' => count($e->getIds()) === 1 ?
-                        $e->getIds()[0] : $e->getIds(),
-                ],
-            ];
-            return response()->json($data, 200, $headers);
+            $data['msg'] = 'no result with id '.$e->getIds()[0];
+            $data['meta']['model'] = $e->getModel();
+            $data['meta']['origin_msg'] = $e->getMessage();
+            $data['meta']['origin_code'] = $e->getCode();
+            $data['meta']['origin_exception'] = get_class($e);
+            $data['meta']['ids'] = $e->getIds();
+
+            return response()->json($data, 200, $this->commonHeaders);
         }
 
         if ($e instanceof HttpException) {
-            $data = [
-                'msg' => $e->getMessage(),
-                'success' => false,
-                'meta' => [
-                    'original_code' => $e->getStatusCode(),
-                ],
-            ];
-            return response()->json($data, 200, $headers);
+
+            if ($e instanceof NotFoundHttpException) {
+                $data['msg'] = 'bad request';
+                $data['meta']['origin_msg'] = $e->getMessage() || 'Bad Request';
+                $data['meta']['origin_code'] = 400;
+                $data['meta']['origin_exception'] = get_class($e);
+
+                return response()->json($data, 400, $this->commonHeaders);
+            }
         }
 
-        if (env('APP_DEBUG') === true) {
-            return parent::render($request, $e);
-        }
+//        if (env('APP_DEBUG') === true) {
+//            return parent::render($request, $e);
+//        }
+
+        return response()->json($data, 200, $this->commonHeaders);
     }
 
 }

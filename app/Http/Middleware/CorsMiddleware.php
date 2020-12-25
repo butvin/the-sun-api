@@ -3,10 +3,14 @@
 namespace App\Http\Middleware;
 
 use Closure;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+/**
+ * Class CorsMiddleware
+ *
+ * @package App\Http\Middleware
+ */
 class CorsMiddleware
 {
 
@@ -20,16 +24,25 @@ class CorsMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        $origin = $request->header('origin');
-
         $headers = [
-            'Access-Control-Allow-Origin' => $origin ? $origin : '*',
-            'Access-Control-Allow-Methods'=> 'POST, GET, OPTIONS, PUT, DELETE',
-            'Access-Control-Allow-Headers'=> 'Content-Type, X-Auth-Token, Origin, x-access-token, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Headers',
-            'Access-Control-Allow-Credentials' => 'true'
+            'Access-Control-Allow-Origin' => $request->header('origin') ?: '*',
+            'Access-Control-Allow-Methods'=> implode(', ', [
+                'POST', 'GET', 'OPTIONS', 'PUT', 'DELETE',
+            ]),
+            'Access-Control-Allow-Headers'=> implode(', ',[
+                'Content-Type',
+                'X-Auth-Token',
+                'Origin',
+                'x-access-token',
+                'Access-Control-Request-Method',
+                'Access-Control-Request-Headers',
+                'Access-Control-Allow-Headers',
+                'X-Butvin-Header',
+            ]),
+            'Access-Control-Allow-Credentials' => 'true',
         ];
 
-        if($request->getMethod() == "OPTIONS") {
+        if ($request->getMethod() === 'OPTIONS') {
             $response = new Response(' ', 200, $headers);
             return $response->send();
         }

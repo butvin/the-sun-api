@@ -30,7 +30,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * @return array
      */
-    public function isActiveStatus()
+    public function isActiveStatus(): array
     {
         return $this->status;
     }

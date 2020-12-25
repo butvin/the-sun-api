@@ -8,10 +8,8 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Lumen\Auth\Authorizable;
-
 
 class Role extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -38,8 +36,7 @@ class Role extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'parent_id',
-        'name', 'description', 'status', 'code',
+        'parent_id', 'name', 'description', 'status', 'code',
         'created_at', 'updated_at',
     ];
 

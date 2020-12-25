@@ -20,14 +20,12 @@ class UsersCollection extends ResourceCollection
     {
         parent::__construct($resource);
 
-        // Drop from the collection all users who blocked.
-        // User is blocked when his status equal '0'
+        // Drop from the Collection all users who blocked (when status equal '0')
         $rejected = $this->collection->reject(
             fn($item) => !($item->status ?? 0)
         );
 
-        // Attaching role's data to users resource instead
-        // 'role_id' attributes values.
+        // Attaching role's data to users resource instead 'role_id' attributes values.
         $this->collection = $rejected->each(function($user) {
             $user->role = $user->role()->first();
             $user->isAdmin = $user->role()->first()->name === 'admin';
