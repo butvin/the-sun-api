@@ -28,6 +28,7 @@ class UsersCollection extends ResourceCollection
         // Attaching role's data to users resource instead 'role_id' attributes values.
         $this->collection = $rejected->each(function($user) {
             $user->role = $user->role()->first();
+            $user->userAcceessToken = $user->userAccessToken()->first();
             $user->isAdmin = $user->role()->first()->name === 'admin';
         });
     }
@@ -61,7 +62,7 @@ class UsersCollection extends ResourceCollection
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Laravel\Lumen\Http\Request  $request
      *
      * @return \Illuminate\Http\JsonResponse
      */

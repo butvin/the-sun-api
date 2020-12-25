@@ -30,10 +30,8 @@ class AuthServiceProvider extends ServiceProvider
         // should return either a User instance or null. You're free to obtain
         // the User instance via an API token or any other method necessary.
 
-        $this->app['auth']->viaRequest('api', function ($request) {
-
+        $this->app['auth']->viaRequest('api/v1', function ($request) {
             $headers = $request->headers->all();
-            dd($headers);
 
             if ($request->input('api_token')) {
                 return User::where('api_token', $request->input('api_token'))->first();
@@ -43,19 +41,19 @@ class AuthServiceProvider extends ServiceProvider
 
     public function checkAccessToken($token): \Illuminate\Http\JsonResponse
     {
-        $token = User::where(['api_token' => $token])->first();
+//        $token = User::where(['api_token' => $token])->first();
 
-        if (! $token) {
+//        if (! $token) {
 //            if ($token->expires_at < time()) {
 //                $data = ['msg' => 'Access token expired'];
 //                return response()->json($response, 200, []);
 //            }
-            $data = ['status' => 'failed', 'msg' => 'access token not found'];
+//            $data = ['status' => 'failed', 'msg' => 'access token not found'];
+//
+//            return response()->json($data, 204);
+//        }
 
-            return response()->json($data, 204);
-        }
-
-        return $token;
+//        return $token;
     }
 
 }

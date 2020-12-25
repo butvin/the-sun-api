@@ -7,11 +7,13 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Lumen\Auth\Authorizable;
 use App\Http\Resources\UsersCollection;
 use App\Models\Role;
+use App\Models\UserAccessToken;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -44,6 +46,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this
             ->hasOne(\App\Models\Role::class, 'id', 'role_id')
+            ->where('status', '=', 1);
+    }
+
+    public function userAccessToken(): belongsTo
+    {
+        return $this
+            ->belongsTo(\App\Models\UserAccessToken::class, 'user_id', 'id')
             ->where('status', '=', 1);
     }
 
@@ -98,15 +107,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'deleted_at' => 'datetime:d/m/Y H:i:s',
     ];
 
-    /**
-     * Create a new Eloquent Collection instance.
-     *
-     * @param  array  $models
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function newCollection(array $models = [])
-    {
-        return new UsersCollection($models);
-    }
+//    /**
+//     * Create a new Eloquent Collection instance.
+//     *
+//     * @param  array  $models
+//     *
+//     * @return \Illuminate\Database\Eloquent\Collection
+//     */
+//    public function newCollection(array $models = [])
+//    {
+//        return new UsersCollection($models);
+//    }
 }

@@ -26,10 +26,10 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        AuthorizationException::class,
-        HttpException::class,
-        ModelNotFoundException::class,
-        ValidationException::class,
+//        AuthorizationException::class,
+//        HttpException::class,
+//        ModelNotFoundException::class,
+//        ValidationException::class,
     ];
 
     /**
@@ -103,9 +103,9 @@ class Handler extends ExceptionHandler
             }
         }
 
-//        if (env('APP_DEBUG') === true) {
-//            return parent::render($request, $e);
-//        }
+        if (env('APP_DEBUG') === true) {
+            return parent::render($request, $e);
+        }
 
         return response()->json($data, 200, $this->commonHeaders);
     }

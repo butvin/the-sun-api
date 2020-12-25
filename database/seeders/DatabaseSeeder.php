@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\UserAccessToken;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
              RolesTableSeeder::class,
              /* additional seeds*/
              UsersTableSeeder::class,
+             UserAccessTokenTableSeeder::class,
          ]);
     }
 }
