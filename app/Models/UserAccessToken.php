@@ -45,23 +45,14 @@ class UserAccessToken extends Model implements AuthenticatableContract, Authoriz
     ];
 
     /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        //'remember_token',
-    ];
-
-    /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [
-        'created_at' => 'datetime:d/m/Y H:i:s',
-        'expires_at' => 'datetime:d/m/Y H:i:s',
-        'updated_at' => 'datetime:d/m/Y H:i:s',
-        'deleted_at' => 'datetime:d/m/Y H:i:s',
+//        'created_at' => 'datetime:d/m/Y H:i:s',
+//        'expires_at' => 'datetime:d/m/Y H:i:s',
+//        'updated_at' => 'datetime:d/m/Y H:i:s',
+//        'deleted_at' => 'datetime:d/m/Y H:i:s',
     ];
 }

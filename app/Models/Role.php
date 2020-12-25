@@ -41,22 +41,13 @@ class Role extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
 
     /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        //'id', 'code', 'parent_id',
-    ];
-
-    /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [
-        'created_at' => 'datetime:d/m/Y H:i:s',
-        'updated_at' => 'datetime:d/m/Y H:i:s',
+//        'created_at' => 'datetime:d/m/Y H:i:s',
+//        'updated_at' => 'datetime:d/m/Y H:i:s',
     ];
 
 }

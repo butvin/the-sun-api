@@ -15,13 +15,14 @@ class CreateUserAccessTokensTable extends Migration
     {
         Schema::create('user_access_tokens', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('token', 255)->unique();
             $table->rememberToken()->unique();;
             $table->boolean('status')->nullable();
             $table->timestamp('expires_at');
             $table->timestamps();
             $table->softDeletes();
+            //$table->foreign('user_id')->references('id')->on('user');
         });
     }
 

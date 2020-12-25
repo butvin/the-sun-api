@@ -7,7 +7,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+//use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Lumen\Auth\Authorizable;
@@ -17,10 +17,7 @@ use App\Models\UserAccessToken;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use SoftDeletes,
-        Authenticatable,
-        Authorizable,
-        HasFactory;
+    use SoftDeletes, Authenticatable, Authorizable, HasFactory;
 
     /**
      * The table associated with the model.
@@ -49,10 +46,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             ->where('status', '=', 1);
     }
 
-    public function userAccessToken(): belongsTo
+    public function userAccessToken(): HasOne
     {
         return $this
-            ->belongsTo(\App\Models\UserAccessToken::class, 'user_id', 'id')
+            ->hasOne(\App\Models\UserAccessToken::class, 'user_id', 'id')
             ->where('status', '=', 1);
     }
 
@@ -63,8 +60,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public static function allUsersActiveStatus($columns = ['*'])
     {
-        return parent::all($columns)
-            ->where('status', '=', 1);
+        return parent::all($columns)->where('status', '=', 1);
     }
 
     /**
@@ -86,36 +82,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
 
     /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password', 'deleted_at', 'role_id',
-        'gl_token', 'fb_token', //'api_token',
-    ];
-
-    /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [
-        'verified_at' => 'datetime:d/m/Y H:i:s',
-        'created_at' => 'datetime:d/m/Y H:i:s',
-        'updated_at' => 'datetime:d/m/Y H:i:s',
-        'deleted_at' => 'datetime:d/m/Y H:i:s',
+//        'verified_at' => 'datetime:d/m/Y H:i:s',
+//        'created_at' => 'datetime:d/m/Y H:i:s',
+//        'updated_at' => 'datetime:d/m/Y H:i:s',
+//        'deleted_at' => 'datetime:d/m/Y H:i:s',
     ];
-
-//    /**
-//     * Create a new Eloquent Collection instance.
-//     *
-//     * @param  array  $models
-//     *
-//     * @return \Illuminate\Database\Eloquent\Collection
-//     */
-//    public function newCollection(array $models = [])
-//    {
-//        return new UsersCollection($models);
-//    }
 }

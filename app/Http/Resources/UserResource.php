@@ -3,11 +3,11 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\Role as RoleResources;
+use App\Http\Resources\RoleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Request;
 
-class User extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * The resource instance.
@@ -22,10 +22,8 @@ class User extends JsonResource
 //        $this->resource = $this->resource->where('status', '=', 1);
 //        $this->resource->filter(function($item, $key) {
 //            if ($item->status === 0) {
-                //dd('bloccc');
 //            }
 //        });
-
 //        $this->resource = $this->resource->each(function ($user, $key) {
 //            return $user->status === 0;
 //        });

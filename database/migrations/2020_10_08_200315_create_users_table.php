@@ -15,10 +15,10 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->integer('role_id')->default(1);
+            $table->smallInteger('role_id')->default(1);
             $table->string('name', 255);
             $table->string('email', 320)->unique();
-            $table->string('phone', 64)->nullable();
+            $table->string('phone', 32)->nullable();
             $table->string('password');
             $table->boolean('status')->nullable();
             $table->string('fb_token')->nullable();
@@ -28,6 +28,10 @@ class CreateUsersTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+//        Schema::table('users',
+//            fn($table) => $table->foreign('role_id')->references('id')->on('roles')
+//        );
     }
 
     /**

@@ -6,7 +6,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Request;
 
-class Role extends JsonResource
+class RoleResource extends JsonResource
 {
     /**
      * Indicates if the resource's collection keys should be preserved.

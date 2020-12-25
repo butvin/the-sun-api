@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-use App\Http\Resources\User as UserResource;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\UsersCollection;
 use App\Http\Middleware\CorsMiddleware;
 
@@ -59,9 +60,7 @@ class UserController extends Controller
      */
     public function getUser(int $id): JsonResponse
     {
-        $user = new UserResource(
-            User::findOrFail($id)
-        );
+        $user = new UserResource(User::findOrFail($id));
 
         return response()->json($user);
     }
