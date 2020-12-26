@@ -7,15 +7,13 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Lumen\Auth\Authorizable;
 
 
 class UserAccessToken extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use SoftDeletes, Authenticatable, Authorizable, HasFactory;
+    use Authenticatable, Authorizable, HasFactory;
 
     /**
      * The table associated with the model.
@@ -40,7 +38,7 @@ class UserAccessToken extends Model implements AuthenticatableContract, Authoriz
      * @var array
      */
     protected $fillable = [
-        'user_id', 'token', 'remember_token', 'status',
+        'user_id', 'token', 'status',
         'created_at', 'updated_at', 'expires_at',
     ];
 

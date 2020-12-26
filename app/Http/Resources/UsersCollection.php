@@ -9,12 +9,12 @@ use Laravel\Lumen\Http\Request;
 
 class UsersCollection extends ResourceCollection
 {
-    /**
-     * The mapped collection instance.
-     *
-     * @var \Illuminate\Support\Collection
-     */
-    public $collection;
+//    /**
+//     * The mapped collection instance.
+//     *
+//     * @var \Illuminate\Support\Collection
+//     */
+//    public $collection;
 
     public function __construct($resource)
     {
@@ -28,8 +28,8 @@ class UsersCollection extends ResourceCollection
         // Attaching role's data to users resource instead 'role_id' attributes values.
         $this->collection = $rejected->each(function($user) {
             $user->role = $user->role()->first();
-            $user->userAcceessToken = $user->userAccessToken()->first();
-            $user->isAdmin = $user->role()->first()->name === 'admin';
+            $user->user_access_token = $user->userAccessToken()->first();
+            $user->isAdmin = ($user->role()->first()->name === 'admin');
         });
     }
 
@@ -42,32 +42,6 @@ class UsersCollection extends ResourceCollection
      */
     public function toArray($request): array
     {
-        return [
-            'data' => $this->collection->keyBy('id'),
-            'links' => [
-                'self' => (string)$request->getUri(),
-                'next' => null,
-                'prev' => null,
-            ],
-            'meta' => [
-                'current_page' => null,
-                'from' => null,
-                'last_page' => null,
-                'path' => '',
-                'per_page' => \App\Models\User::class,
-                'to' => null,
-                'total' =>$this->collection->count(),
-            ],
-        ];
-    }
-
-    /**
-     * @param  \Laravel\Lumen\Http\Request  $request
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function toResponse($request): JsonResource
-    {
-        return parent::toResponse($request);
+        return parent::toArray($request);
     }
 }

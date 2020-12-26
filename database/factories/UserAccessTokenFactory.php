@@ -23,9 +23,8 @@ class UserAccessTokenFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => random_int(1, 50),
+            'user_id' => random_int(3, 9),
             'token' => $this->faker->sha256,
-            'remember_token' => $this->faker->md5,
             'status' => 1,
             'expires_at' => $this->faker->dateTime,
             'created_at' => $this->faker->dateTime,

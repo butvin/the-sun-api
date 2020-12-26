@@ -34,35 +34,33 @@ class UserController extends Controller
     }
 
     /**
-     * Show all active users.
+     * Get users resources collection (All users active and blocked).
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return UsersCollection|JsonResponse
      */
-    public function getAllUsers(): JsonResponse
+    public function getAllUsers()
     {
-        $users = new UsersCollection(UserResource::collection(
-            User::where('status', 1)->orderBy('id')->get()
-        ));
+        $users = User::all(); //User::where('status', 1)->orderBy('id')->get();
 
-        if ($users instanceof UsersCollection && $users->isEmpty()) {
+        if ($users->isEmpty()) {
             return response()->json(['msg' => 'no users found', ]);
         }
 
-        return response()->json($users);
+        return new UsersCollection($users);
     }
 
     /**
-     * Get user resource by id.
+     * Get users resource by id.
      *
-     * @param integer $id
+     * @param  int  $id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \App\Http\Resources\UserResource
      */
-    public function getUser(int $id): JsonResponse
+    public function getUser(int $id): UserResource
     {
-        $user = new UserResource(User::findOrFail($id));
+        $user = User::findOrFail($id);
 
-        return response()->json($user);
+        return new UserResource($user);
     }
 
     /**
@@ -90,6 +88,7 @@ class UserController extends Controller
 
         $attributes['password'] = Hash::make($attributes['password']);
         $attributes['api_token'] = Hash::make('bla-bla-bla-'.time());
+        // todo:
         $attributes['status'] = 1;
         $attributes['role_id'] = 1;
 
