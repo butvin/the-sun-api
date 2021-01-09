@@ -17,6 +17,6 @@ class UserAccessTokenTableSeeder extends Seeder
      */
     public function run(): void
     {
-        UserAccessToken::factory()->times(7)->create();
+        UserAccessToken::factory()->times(4)->create();
     }
 }

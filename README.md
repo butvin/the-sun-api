@@ -8,22 +8,22 @@ Create migrations and DB mock:
 ## Available routes:
 
 ### GET /
-Start point the App. Redirect to /api/v1
+Start point the App. Redirect to `/api/v1`
 
 ### GET /api/v1
-API service information
+API information
 
 ### GET /api/v1/users
-Get users resources collections
+Get users resources collections.
 
 ### POST /api/v1/users
-Create and store a new user resource
+Save a new user resource.
 
 ### GET /api/v1/users/{id}
-Find users resource by `integer` **id** parameter
+Get the specific user resource. `({id:[0-9]+} param)`
 
 ### PUT /api/v1/users/{id}
-Update users resource by `integer` **id** parameter
+Update the user resource. `({id:[0-9]+} param)`
 
 ### DELETE /api/v1/users/{id}
-Destroy users resource by `integer` **id** parameter
+Destroy user resource. `(soft delete, {id:[0-9]+} param)`

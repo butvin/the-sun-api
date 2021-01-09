@@ -46,6 +46,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             ->where('status', '=', 1);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function userAccessToken(): HasOne
     {
         return $this
@@ -78,18 +81,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $fillable = [
         'role_id', 'name', 'email', 'status', 'phone',
         'fb_token', 'gl_token', 'api_token', 'password',
-        'created_at', 'updated_at', 'verified_at',
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-//        'verified_at' => 'datetime:d/m/Y H:i:s',
-//        'created_at' => 'datetime:d/m/Y H:i:s',
-//        'updated_at' => 'datetime:d/m/Y H:i:s',
-//        'deleted_at' => 'datetime:d/m/Y H:i:s',
+        'verified_at',
+//        'created_at', 'updated_at',
     ];
 }

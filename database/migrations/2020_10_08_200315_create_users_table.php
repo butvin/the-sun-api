@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->smallInteger('role_id')->default(1);
-            $table->boolean('status')->nullable();
+            $table->boolean('status')->nullable()->default(0);
             $table->string('name', 255);
             $table->string('email', 320)->unique();
             $table->string('phone', 32)->nullable();
@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('fb_token', 100)->nullable();
             $table->string('gl_token', 100)->nullable();
             $table->string('api_token', 100)->nullable();
-            // todo: remove
+            $table->rememberToken();
             $table->timestamp('verified_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -42,7 +42,7 @@ class CreateUsersTable extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', fn(Blueprint $table) => $table->dropSoftDeletes());
+        //Schema::table('users', fn(Blueprint $table) => $table->dropSoftDeletes());
         Schema::dropIfExists('users');
     }
 }

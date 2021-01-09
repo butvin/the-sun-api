@@ -15,7 +15,7 @@ class CreateUserAccessTokensTable extends Migration
     {
         Schema::create('user_access_tokens', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->unique();// One user from one token-access
             $table->string('token', 100)->unique();
             $table->boolean('status')->nullable();
             $table->timestamp('expires_at');
@@ -23,7 +23,7 @@ class CreateUserAccessTokensTable extends Migration
             //$table->foreign('user_id')->references('id')->on('user');
         });
 
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('user_access_tokens', function (Blueprint $table) {
             $table->rememberToken()->unique();
         });
     }

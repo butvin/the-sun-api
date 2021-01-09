@@ -25,18 +25,18 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'role_id' => random_int(1, 4),
+//            'role_id' => random_int(1, 4),
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
             'phone' => $this->faker->phoneNumber,
-            'password' => $this->faker->password(),
-            'status' => random_int(0, 1),
-            'api_token' => $this->faker->sha256,
-            'gl_token' => $this->faker->md5,
-            'fb_token' => fn () => null,
-            'verified_at' => $this->faker->dateTime,
-            'created_at' => $this->faker->dateTime,
-            'updated_at' => $this->faker->dateTime,
+            'password' => $this->faker->md5,
+//            'status' => 0,
+//            'api_token' => $this->faker->sha256,
+//            'gl_token' => $this->faker->md5,
+//            'fb_token' => fn () => null,
+//            'verified_at' => $this->faker->dateTime(),
+//            'created_at' => $this->faker->dateTime,
+//            'updated_at' => $this->faker->dateTime,
         ];
     }
 }

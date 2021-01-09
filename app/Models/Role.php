@@ -37,7 +37,7 @@ class Role extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $fillable = [
         'parent_id', 'name', 'description', 'status', 'code',
-        'created_at', 'updated_at',
+        //'created_at', 'updated_at',
     ];
 
     /**
@@ -45,9 +45,9 @@ class Role extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var array
      */
-    protected $casts = [
+//    protected $casts = [
 //        'created_at' => 'datetime:d/m/Y H:i:s',
 //        'updated_at' => 'datetime:d/m/Y H:i:s',
-    ];
+//    ];
 
 }

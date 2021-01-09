@@ -23,12 +23,12 @@ class UserAccessTokenFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => random_int(3, 9),
+            'user_id' => $this->faker->unique()->numberBetween(),
             'token' => $this->faker->sha256,
             'status' => 1,
-            'expires_at' => $this->faker->dateTime,
-            'created_at' => $this->faker->dateTime,
-            'updated_at' => $this->faker->dateTime,
+            'expires_at' => $this->faker->dateTimeInInterval('now', '+1days')
+//            'created_at' => $this->faker->dateTime,
+//            'updated_at' => $this->faker->dateTime,
         ];
     }
 }

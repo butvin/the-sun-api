@@ -24,11 +24,11 @@ class RoleFactory extends Factory
     {
         return [
             'name' => $this->faker->text(7),
-            'code' => random_int(1, 999),
+            'code' => random_int(100, 999),
             'description' => $this->faker->text(),
             'status' => 1,
-            'created_at' => $this->faker->dateTime,
-            'updated_at' => $this->faker->dateTime,
+//            'created_at' => $this->faker->dateTime,
+//            'updated_at' => $this->faker->dateTime,
         ];
     }
 }

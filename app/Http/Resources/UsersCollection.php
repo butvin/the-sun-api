@@ -29,7 +29,7 @@ class UsersCollection extends ResourceCollection
         $this->collection = $rejected->each(function($user) {
             $user->role = $user->role()->first();
             $user->user_access_token = $user->userAccessToken()->first();
-            $user->isAdmin = ($user->role()->first()->name === 'admin');
+            //$user->isAdmin = $user->when($user->role()->first()->name === 'admin', 'true');
         });
     }
 
