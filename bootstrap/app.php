@@ -5,7 +5,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(dirname(__DIR__)))
     ->bootstrap();
 
-date_default_timezone_set(env('APP_TIMEZONE', 'EET'));
+date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +57,10 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('auth');
+$app->configure('database');
+$app->configure('queue');
+$app->configure('services');
 
 /*
 |--------------------------------------------------------------------------
@@ -91,6 +95,7 @@ $app->routeMiddleware([
 
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(Illuminate\Redis\RedisServiceProvider::class);
 //$app->register(App\Providers\EventServiceProvider::class);
 
 /*

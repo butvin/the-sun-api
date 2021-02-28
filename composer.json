@@ -6,6 +6,7 @@
     "type": "project",
     "require": {
         "php": "^7.4.3",
+        "illuminate/redis": "^8.29",
         "laravel/lumen-framework": "8.2.3"
     },
     "require-dev": {
