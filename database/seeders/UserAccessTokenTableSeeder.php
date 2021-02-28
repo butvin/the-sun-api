@@ -1,11 +1,9 @@
 <?php
 
-
 namespace Database\Seeders;
 
 use App\Models\UserAccessToken;
 use Illuminate\Database\Seeder;
-
 
 class UserAccessTokenTableSeeder extends Seeder
 {
@@ -17,6 +15,8 @@ class UserAccessTokenTableSeeder extends Seeder
      */
     public function run(): void
     {
-        UserAccessToken::factory()->times(4)->create();
+        UserAccessToken::factory()
+            ->times(512)
+            ->create();
     }
 }
