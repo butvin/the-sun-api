@@ -1,4 +1,10 @@
 # Sun REST API
+
+sent Env & install dependencies:
+> cp .env.example .env
+
+> composer install
+
 Start serving the Application:
 > php -S localhost:8080 -t public
 

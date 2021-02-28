@@ -20,7 +20,11 @@ $router->group([
 //    'middleware' => ['auth'],
 ], function () use ($router) {
     $router->get('/', fn() => $router->app->version());
+
+    // Users resource collection
     $router->get('users', ['uses' => 'UserController@getAllUsers']);
+
+    // Crud users resource
     $router->post('users', ['uses' => 'UserController@register']);
     $router->get('users/{id:[0-9]+}', ['uses' => 'UserController@getUser']);
     $router->put('users/{id:[0-9]+}', ['uses' => 'UserController@updateUser']);
