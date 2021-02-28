@@ -9,6 +9,11 @@ use Illuminate\Database\Seeder;
 class UsersTableSeeder extends Seeder
 {
     /**
+     * Number of generated users
+     */
+    const SEEDS_USERS_COUNT = 1024;
+
+    /**
      * Run the 'users' table seeds
      *
      * @return void
@@ -16,7 +21,7 @@ class UsersTableSeeder extends Seeder
     public function run(): void
     {
         User::factory()
-            ->times(1024)
+            ->times(self::SEEDS_USERS_COUNT)
             ->create();
     }
 }
