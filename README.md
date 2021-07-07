@@ -33,3 +33,6 @@ Update the user resource. `({id:[0-9]+} param)`
 
 ### DELETE /api/v1/users/{id}
 Destroy user resource. `(soft delete, {id:[0-9]+} param)`
+
+
+
