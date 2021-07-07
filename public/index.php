@@ -23,6 +23,35 @@ $app = require __DIR__.'/../bootstrap/app.php';
 | the client's browser allowing them to enjoy the creative
 | and wonderful application we have prepared for them.
 |
+
+
+
+    private function sortPublishers():array
+    {
+        $result = [];
+        $banned = [];
+        $updated = [];
+        
+        $yesterday = new \DateTime(Application::TTL);
+        $publishers = $this->repository->findAll();
+        foreach ($publishers as $publisher) {
+            if ($publisher->getDeletedAt() > $yesterday) {
+                $banned[$publisher->getId()] = $publisher->getApplicationsSorted()->getIterator();
+                foreach($banned[$publisher->getId()] as $application) {
+                    if ($application->getDeletedAt() > $yesterday) {
+                        $result[$publisher->getId()] = $result[$application->getId()];
+                    }
+                }
+            }
+        }
+        arsort($banned);
+
+        return $result;
+    }
+
+
+
+
 */
 
 $app->run();
